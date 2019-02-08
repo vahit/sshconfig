@@ -114,15 +114,15 @@ do_remove_process() {
 
 do_list_process() {
     if [ -n "$2" ]; then
-     	name=$2
-	if [[ $(do_check_names | grep --count "^$name$") != 0 ]]; then
-		awk -v name="$name" -v green="\033[0;32m" -v reset="\033[0m" -v RS='' 'index($0, name) { for (i = 1; i < NF; i += 2) { printf("%s%s%s: %s%s", green, $i, reset, $(i + 1), (i < NF -2)? "  ": "\n") } exit }' $CONFIGFILE 
-		exit 0
-	else
-		error "Sorry, \"$name\" is not in list"
-	fi
+ 	      name=$2
+        if [[ $(do_check_names | grep --count "$name") != 0 ]]; then
+            awk -v name="$name" -v green="\033[0;32m" -v reset="\033[0m" -v RS='' 'index($0, name) { for (i = 1; i < NF; i += 2) { printf("%s%s%s: %s%s", green, $i, reset, $(i + 1), (i < NF -2)? "  ": "\n") } }' $CONFIGFILE | column -t
+            exit 0
+        else
+            error "Sorry, \"$name\" is not in list"
+        fi
     else
-	 awk -v name="$name" -v green="\033[0;32m" -v reset="\033[0m" -v RS='' '{ for (i = 1; i < NF; i += 2) { printf("%s%s%s: %s\t%s", green, $i, reset, $(i + 1), (i < NF -2)? "  ": "\n") } }' $CONFIGFILE | column -t
+        awk -v green="\033[0;32m" -v reset="\033[0m" -v RS='' '{ for (i = 1; i < NF; i += 2) { printf("%s%s%s: %s\t%s", green, $i, reset, $(i + 1), (i < NF -2)? "  ": "\n") } }' $CONFIGFILE | column -t
     fi
 }
 
